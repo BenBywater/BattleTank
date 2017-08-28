@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTanks.h"
+#include "TankAimingComponent.h"
+#include "TankBarrel.h"
+#include "Projectile.h"
 #include "Tank.h"
 
 
@@ -8,7 +11,7 @@
 ATank::ATank()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	tankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
 }
@@ -16,7 +19,15 @@ ATank::ATank()
 void ATank::SetBarrelReference(UTankBarrel* barrelToSet)
 {
 	tankAimingComponent->SetBarrelReference(barrelToSet);
+	barrel = barrelToSet;
 }
+
+
+void ATank::SetTurretReference(UTankTurret* turretToSet)
+{
+	tankAimingComponent->SetTurretReference(turretToSet);
+}
+
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
@@ -24,12 +35,6 @@ void ATank::BeginPlay()
 	
 }
 
-// Called every frame
-void ATank::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 // Called to bind functionality to input
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -43,4 +48,20 @@ void ATank::AimAt(FVector hitLocation)
 	tankAimingComponent->AimAt(hitLocation, firingSpeed);
 	/*auto playerTankName = GetName();
 	UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s"), *playerTankName, *hitLocation.ToString());*/
+}
+
+void ATank::Fire()
+{
+	bool isReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
+	auto Time = GetWorld()->GetTimeSeconds();
+	UE_LOG(LogTemp, Warning, TEXT("%f: Tank fires"), Time);
+	if (barrel != NULL && isReloaded)
+	{
+		//spawn a projectile at barrel socket
+		auto projectile = GetWorld()->SpawnActor<AProjectile>(projecttileBluePrint,
+			barrel->GetSocketLocation(FName("Projectile")),
+			barrel->GetSocketRotation(FName("Projectile")));
+		projectile->LaunchProjectile(firingSpeed);
+		lastFireTime = FPlatformTime::Seconds();
+	}
 }

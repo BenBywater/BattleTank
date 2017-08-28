@@ -2,9 +2,11 @@
 
 #pragma once
 
-#include "TankBarrel.h"
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
+
+class UTankBarrel;
+class UTankTurret;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANKS_API UTankAimingComponent : public UActorComponent
@@ -16,12 +18,12 @@ public:
 	UTankAimingComponent();
 
 	void SetBarrelReference(UTankBarrel* barrelToSet);
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void SetTurretReference(UTankTurret* turretToSet);
 
 	void AimAt(FVector worldSpaceAim, float launchSpeed);
 
 	UTankBarrel* barrel = NULL;
+	UTankTurret* turret = NULL;
 
 	void MoveBarrelTowards(FVector aimDirection);
 

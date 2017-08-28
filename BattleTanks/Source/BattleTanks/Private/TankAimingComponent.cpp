@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTanks.h"
+#include "TankBarrel.h"
+#include "TankTurret.h"
 #include "TankAimingComponent.h"
 
 
@@ -9,7 +11,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -17,6 +19,11 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToSet)
 {
 	barrel = barrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* turretToSet)
+{
+	turret = turretToSet;
 }
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
@@ -28,15 +35,6 @@ void UTankAimingComponent::BeginPlay()
 }
 
 
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
-
 void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed)
 {
 	if (barrel)
@@ -44,7 +42,7 @@ void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed)
 		FVector outlaunchVelocity;
 		FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
 		bool aimSolution = UGameplayStatics::SuggestProjectileVelocity(this, outlaunchVelocity, startLocation,
-			hitLocation, launchSpeed, ESuggestProjVelocityTraceOption::DoNotTrace);
+			hitLocation, launchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace);
 		if (aimSolution)
 		{
 			//FString playerTankName = GetOwner()->GetName();
@@ -63,7 +61,12 @@ void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection)
 	auto barrelRotator = barrel->GetForwardVector().Rotation();
 	auto aimAsRotator = aimDirection.Rotation();
 	auto deltaRotator = aimAsRotator - barrelRotator;
-	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *deltaRotator.ToString());
+	
+	//UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *deltaRotator.ToString());
 
-	barrel->Elevate(5);
+	barrel->Elevate(deltaRotator.Pitch);
+	
+	auto turretRotator = turret->GetForwardVector().Rotation();
+	deltaRotator = aimAsRotator - turretRotator;
+	turret->Rotate(deltaRotator.Yaw);
 }
