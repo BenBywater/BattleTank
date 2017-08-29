@@ -20,6 +20,7 @@ public:
 	void SetBarrelReference(UTankBarrel* barrelToSet);
 	void SetTurretReference(UTankTurret* turretToSet);
 
+
 	void AimAt(FVector worldSpaceAim, float launchSpeed);
 
 	UTankBarrel* barrel = NULL;

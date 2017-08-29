@@ -8,6 +8,8 @@
 class UTankAimingComponent;
 class UTankBarrel;
 class UTankTurret;
+class UTankTrack;
+class UTankMovementComponent;
 class AProjectile;
 
 UCLASS()
@@ -23,6 +25,8 @@ public:
 	void SetBarrelReference(UTankBarrel* barrelToSet);
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetTurretReference(UTankTurret* turretToSet);
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTrackReference(UTankTrack* tackToSet);
 	UFUNCTION(BlueprintCallable, Category = Firing)
 	void Fire();
 
@@ -32,6 +36,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	UTankAimingComponent* tankAimingComponent = NULL;
+
+	UPROPERTY(BlueprintReadOnly)
+	UTankMovementComponent* tankMovementComponent = NULL;
 
 private:	
 

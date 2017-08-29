@@ -18,6 +18,7 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToSet)
 {
+	GetOwner()->GetName();
 	barrel = barrelToSet;
 }
 
@@ -25,6 +26,7 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* turretToSet)
 {
 	turret = turretToSet;
 }
+
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {

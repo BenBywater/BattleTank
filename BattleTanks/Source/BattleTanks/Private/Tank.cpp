@@ -4,13 +4,14 @@
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
+#include "TankMovementComponent.h"
 #include "Tank.h"
 
 
 // Sets default values
 ATank::ATank()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	tankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
@@ -27,6 +28,13 @@ void ATank::SetTurretReference(UTankTurret* turretToSet)
 {
 	tankAimingComponent->SetTurretReference(turretToSet);
 }
+
+
+void ATank::SetTrackReference(UTankTrack* trackToSet)
+{
+	
+}
+
 
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
@@ -54,7 +62,7 @@ void ATank::Fire()
 {
 	bool isReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
 	auto Time = GetWorld()->GetTimeSeconds();
-	UE_LOG(LogTemp, Warning, TEXT("%f: Tank fires"), Time);
+	//UE_LOG(LogTemp, Warning, TEXT("%f: Tank fires"), Time);
 	if (barrel != NULL && isReloaded)
 	{
 		//spawn a projectile at barrel socket
