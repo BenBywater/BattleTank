@@ -19,11 +19,14 @@ public:
 
 	//Max force per track in netwons
 	UPROPERTY(EditDefaultsOnly, Category = "Driving")
-	float trackMaxDrivingForce = 4000000; //assume 40 tone tank, 1g acceleration
+	float trackMaxDrivingForce = 40000000; //assume 40 tone tank, 1g acceleration
 
 private:
 	UTankTrack();
-
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-	
+	virtual void BeginPlay() override;
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit);
+	void ApplySidewaysForce();
+	void DriveTrack();
+	float currentThrottle = 0;
 };
