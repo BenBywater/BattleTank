@@ -38,7 +38,7 @@ public:
 	EFiringState GetFiringState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Firing")
-	int GetRoundsLeft() const;
+	int32 GetRoundsLeft() const;
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState firingState = EFiringState::reloading;
@@ -59,7 +59,7 @@ private:
 
 	//1000 meters a second
 	UPROPERTY(EditAnywhere, Category = "Firing")
-	float firingSpeed = 4000;
+	float firingSpeed = 40000;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float reloadTimeInSeconds = 3;
@@ -73,6 +73,6 @@ private:
 
 	FVector aimDirection;
 
-	
-	int ammoCount = 3;
+	UPROPERTY(EditAnywhere, Category = "Firing")
+	int32 ammoCount = 3;
 };

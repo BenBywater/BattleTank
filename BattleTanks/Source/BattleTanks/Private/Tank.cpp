@@ -6,9 +6,25 @@
 #include "Tank.h"
 
 
+
 // Sets default values
 ATank::ATank()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+}
+
+float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	int32 damagePoints = FPlatformMath::RoundToInt(DamageAmount);
+	int32 damageToApply = FMath::Clamp(damagePoints, 0, currentHealth);
+
+	currentHealth -= damageToApply;
+	
+	return damageToApply;
+}
+
+float ATank::GetHealthPercent() const
+{
+	return (float)currentHealth / (float)startingHealth;
 }

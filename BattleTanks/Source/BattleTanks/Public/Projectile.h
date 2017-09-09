@@ -19,12 +19,32 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 	void LaunchProjectile(float speed);
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float destroyDelay = 10.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float projectileDamage = 20.f;
+
 	UProjectileMovementComponent* projectileMovement = NULL;
 
-	
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent* collisionMesh = NULL;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent* launchBlast = NULL;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent* impactBlast = NULL;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	URadialForceComponent* explosionForce = NULL;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit);
+
+	void OnTimerExpire();
+
 };

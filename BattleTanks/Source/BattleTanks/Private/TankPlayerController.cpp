@@ -44,7 +44,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& hitLocation) const
 	// Find the crosshair position
 	//"De-project" the screeb position of the crosshair to a world direction
 	// Line-trace along that look direction, and see what we hit(up tp max range)
-	int viewX, viewY;
+	int32 viewX, viewY;
 	FVector worldLocation, worldDirection;
 	GetViewportSize(viewX, viewY);
 	float screenLocationX = viewX * crossHairX;

@@ -39,6 +39,6 @@ private:
 
 	// 10km
 	UPROPERTY(EditAnywhere)
-	int lineTraceRange = 1000000;
+	int32 lineTraceRange = 1000000;
 
 };
