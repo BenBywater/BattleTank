@@ -2,8 +2,8 @@
 
 #include "BattleTanks.h"
 #include "TankAimingComponent.h"
-#include "TankBarrel.h"
 #include "TankAIController.h"
+#include "Tank.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -34,4 +34,27 @@ void ATankAIController::Tick(float deltaTime)
 			
 		}
 	}
+}
+
+void ATankAIController::SetPawn(APawn* inPawn)
+{
+	Super::SetPawn(inPawn);
+	if (inPawn)
+	{
+		auto possessedTank = Cast<ATank>(inPawn);
+		if (ensure(possessedTank))
+		{
+			possessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
+		}
+	}
+}
+
+void ATankAIController::OnPossessedTankDeath()
+{
+	if (GetPawn() != NULL)
+	{
+		GetPawn()->DetachFromControllerPendingDestroy();
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("Tank just died"));
 }

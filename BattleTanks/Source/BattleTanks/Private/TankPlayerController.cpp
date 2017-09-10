@@ -3,6 +3,7 @@
 #include "BattleTanks.h"
 #include "TankAimingComponent.h"
 #include "TankPlayerController.h"
+#include "Tank.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -65,7 +66,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector lookDirection, FVec
 	FHitResult hitResult;
 	auto startLocation = PlayerCameraManager->GetCameraLocation();
 	auto endLocation = startLocation + (lookDirection * lineTraceRange);
-	if (GetWorld()->LineTraceSingleByChannel(hitResult, startLocation, endLocation, ECollisionChannel::ECC_Visibility))
+	if (GetWorld()->LineTraceSingleByChannel(hitResult, startLocation, endLocation, ECollisionChannel::ECC_Camera))
 	{
 		hitLocation = hitResult.Location;
 		returnFlag = true;
@@ -77,3 +78,21 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector lookDirection, FVec
 	return returnFlag;
 }
 
+void ATankPlayerController::SetPawn(APawn* inPawn)
+{
+	Super::SetPawn(inPawn);
+	if (inPawn)
+	{
+		auto possessedTank = Cast<ATank>(inPawn);
+		if (ensure(possessedTank))
+		{
+			possessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+		}
+	}
+}
+
+void ATankPlayerController::OnPossessedTankDeath()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Players Tank just died"));
+	StartSpectatingOnly();
+}
