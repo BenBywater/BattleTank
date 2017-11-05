@@ -9,7 +9,7 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	auto aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
-	if (ensure(aimingComponent))
+	if (aimingComponent != NULL)
 	{
 
 		FoundAimingComponent(aimingComponent);
@@ -24,10 +24,10 @@ void ATankPlayerController::Tick(float deltaTime)
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (ensure(GetPawn()))
+	if (GetPawn() != NULL)
 	{
 		auto aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
-		if (ensure(aimingComponent))
+		if (aimingComponent != NULL)
 		{
 			FVector hitLocation;
 			if (GetSightRayHitLocation(hitLocation))
@@ -84,7 +84,7 @@ void ATankPlayerController::SetPawn(APawn* inPawn)
 	if (inPawn)
 	{
 		auto possessedTank = Cast<ATank>(inPawn);
-		if (ensure(possessedTank))
+		if (possessedTank != NULL)
 		{
 			possessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
 		}
@@ -95,4 +95,10 @@ void ATankPlayerController::OnPossessedTankDeath()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Players Tank just died"));
 	StartSpectatingOnly();
+	GetWorld()->GetTimerManager().SetTimer(RestartTimerHandle, this, &ATankPlayerController::RestartLevel, 5.f, false);
+}
+
+void ATankPlayerController::RestartLevel()
+{
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 }

@@ -25,6 +25,7 @@ public:
 
 	bool GetLookVectorHitLocation(FVector lookDirection, FVector& hitrLocation) const;
 
+	void RestartLevel();
 	
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
@@ -45,5 +46,11 @@ private:
 
 	UFUNCTION()
 	void OnPossessedTankDeath();
+
+	/* Handle to manage the timer */
+	FTimerHandle RestartTimerHandle;
+
+	// Timer to restart level on death
+	float Timer = 3.f;
 
 };

@@ -66,7 +66,7 @@ void UTankAimingComponent::Initialise(UTankBarrel* barrelToSet, UTankTurret* tur
 bool UTankAimingComponent::IsBarrelMoving()
 {
 	bool movingFlag = false;
-	if (ensure(barrel))
+	if (barrel != NULL)
 	{
 		auto barrelForward = barrel->GetForwardVector();
 		movingFlag = !barrelForward.Equals(aimDirection, 0.01);
@@ -78,7 +78,7 @@ bool UTankAimingComponent::IsBarrelMoving()
 
 void UTankAimingComponent::AimAt(FVector hitLocation)
 {
-	if (ensure(barrel))
+	if (barrel != NULL)
 	{
 		FVector outlaunchVelocity;
 		FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
@@ -96,7 +96,7 @@ void UTankAimingComponent::AimAt(FVector hitLocation)
 
 void UTankAimingComponent::MoveBarrelTowards(FVector aimDir)
 {
-	if (ensure(barrel) && ensure(turret))
+	if (barrel != NULL && turret != NULL)
 	{
 		// work=put difference between current barrel rotation and aimDirection
 		auto barrelRotator = barrel->GetForwardVector().Rotation();
@@ -122,9 +122,9 @@ void UTankAimingComponent::Fire()
 	
 	if (firingState == EFiringState::locked || firingState == EFiringState::aiming)
 	{
-		if (ensure(barrel))
+		if (barrel != NULL)
 		{
-			if (ensure(projecttileBluePrint))
+			if (projecttileBluePrint != NULL)
 			{
 				//spawn a projectile at barrel socket
 				auto projectile = GetWorld()->SpawnActor<AProjectile>(projecttileBluePrint,
