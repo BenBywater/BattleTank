@@ -39,9 +39,11 @@ void ATankAIController::Tick(float deltaTime)
 void ATankAIController::SetPawn(APawn* inPawn)
 {
 	Super::SetPawn(inPawn);
-	if (inPawn)
+
+	if (inPawn != NULL)
 	{
 		auto possessedTank = Cast<ATank>(inPawn);
+		// set on death static function call
 		if (possessedTank != NULL)
 		{
 			possessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedTankDeath);
@@ -51,6 +53,7 @@ void ATankAIController::SetPawn(APawn* inPawn)
 
 void ATankAIController::OnPossessedTankDeath()
 {
+	// safely detach pawn from its controller
 	if (GetPawn() != NULL)
 	{
 		GetPawn()->DetachFromControllerPendingDestroy();

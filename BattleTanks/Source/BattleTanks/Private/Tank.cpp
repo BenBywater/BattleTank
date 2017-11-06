@@ -17,6 +17,7 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	// set current health
 	currentHealth = startingHealth;
 }
 
@@ -24,10 +25,11 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEv
 {
 	int32 damagePoints = FPlatformMath::RoundToInt(DamageAmount);
 	int32 damageToApply = FMath::Clamp(damagePoints, 0, currentHealth);
-
+	// apply damage
 	currentHealth -= damageToApply;
 	if (currentHealth <= 0)
 	{
+		// broadcast death of pawn
 		OnDeath.Broadcast();
 	}
 	return damageToApply;
@@ -35,5 +37,6 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEv
 
 float ATank::GetHealthPercent() const
 {
+	// calculate health
 	return (float)currentHealth / (float)startingHealth;
 }

@@ -38,7 +38,7 @@ int32 UTankAimingComponent::GetRoundsLeft() const
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	
+	// calculate UI firing state
 	if (ammoCount <= 0)
 	{
 		firingState = EFiringState::outOfAmmo;
@@ -65,6 +65,7 @@ void UTankAimingComponent::Initialise(UTankBarrel* barrelToSet, UTankTurret* tur
 
 bool UTankAimingComponent::IsBarrelMoving()
 {
+	// calculates if barrel is moving for player UI
 	bool movingFlag = false;
 	if (barrel != NULL)
 	{
@@ -82,11 +83,12 @@ void UTankAimingComponent::AimAt(FVector hitLocation)
 	{
 		FVector outlaunchVelocity;
 		FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
+		// Returns the launch velocity needed for a projectile, returns cool if projectile can hit en location
 		bool aimSolution = UGameplayStatics::SuggestProjectileVelocity(this, outlaunchVelocity, startLocation,
 			hitLocation, firingSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace);
 		if (aimSolution)
 		{
-			//auto barrelLocation = barrel->GetComponentLocation().ToString();
+			// move barrel
 			aimDirection = outlaunchVelocity.GetSafeNormal();
 			MoveBarrelTowards(aimDirection);
 		}

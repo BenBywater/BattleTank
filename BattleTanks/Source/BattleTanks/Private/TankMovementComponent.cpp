@@ -6,11 +6,8 @@
 
 void UTankMovementComponent::Initialise(UTankTrack* leftTrackToSet, UTankTrack* rightTrackToSet)
 {
-	if (
-		
-		
-		
-		(leftTrackToSet && rightTrackToSet))
+	// Initialise track tracks
+	if (leftTrackToSet != NULL && rightTrackToSet != NULL)
 	{
 		leftTrack = leftTrackToSet;
 		rightTrack = rightTrackToSet;
@@ -21,11 +18,12 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 {
 
 	// no need to call super as we're replacing the functionality
-	// Dot product, magnitude of planyer tank and AI tank multiplied by cosine
-	// Allows AI tanks to calculate 90 degree alignment
+
 	auto tanklForward = GetOwner()->GetActorForwardVector();
 	auto aiForwardIntention = MoveVelocity.GetSafeNormal();
 
+	// Dot product, magnitude of planyer tank and AI tank multiplied by cosine
+	// Allows AI tanks to calculate 90 degree alignment
 	auto forwardThrow = FVector::DotProduct(tanklForward, aiForwardIntention);
 
 	IntendMoveForward(forwardThrow);
@@ -38,6 +36,7 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 
 void UTankMovementComponent::IntendMoveForward(float move)
 {
+	// move tank forward or backward
 	if (leftTrack != NULL && rightTrack != NULL)
 	{
 		leftTrack->SetThrottle(move);
@@ -49,7 +48,11 @@ void UTankMovementComponent::IntendMoveForward(float move)
 
 void UTankMovementComponent::IntendTurnRight(float move)
 {
-	leftTrack->SetThrottle(move);
-	rightTrack->SetThrottle(-move);
+	// rotate tank left or right
+	if (leftTrack != NULL && rightTrack != NULL)
+	{
+		leftTrack->SetThrottle(move);
+		rightTrack->SetThrottle(-move);
+	}
 }
 

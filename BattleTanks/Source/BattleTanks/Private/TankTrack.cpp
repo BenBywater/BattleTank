@@ -30,6 +30,7 @@ void UTankTrack::ApplySidewaysForce()
 
 void UTankTrack::SetThrottle(float throttle)
 {
+	// clamp throttle speed
 	currentThrottle = FMath::Clamp<float>(currentThrottle + throttle, -1, 1);
 }
 
@@ -42,9 +43,11 @@ void UTankTrack::OnHit(UPrimitiveComponent* hitComponent, AActor* otherActor, UP
 
 void UTankTrack::DriveTrack()
 {
+	// get force and track location
 	FVector forceApplied = GetForwardVector() * (currentThrottle * trackMaxDrivingForce);
 	FVector forceLocation = GetComponentLocation();
-
+	
+	// apply force to track location
 	UPrimitiveComponent *tankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	tankRoot->AddForceAtLocation(forceApplied, forceLocation);
 }

@@ -47,4 +47,6 @@ private:
 
 	void OnTimerExpire();
 
+	FTimerHandle timer;
+
 };
